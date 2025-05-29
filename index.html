@@ -80,7 +80,8 @@
   <script>
     const animalItems = ["BEAR", "ELK", "FOX", "HAWK", "SALMON"];
     const tileItems = ["DESERT", "FOREST", "LAKE", "MOUNTAIN", "SWAMP"];
-    const allItems = [...animalItems, ...tileItems];
+    const otherItems = ["NATURE"];
+    const allItems = [...animalItems, ...tileItems, ...otherItems];
     const playerNames = ["김형석", "이주만", "티아나", "김정민", "이영철", "정영훈", "김지호", "이윤석", "이하진", "김형준"];
     let activePlayers = [];
 
@@ -137,7 +138,7 @@
           const input = document.createElement("input");
           input.type = "number";
           input.className = "input score-input";
-          input.value = 0;
+          input.placeholder = "";
           input.min = 0;
           input.name = `${item}_${name}`;
           input.addEventListener('input', () => {
@@ -182,7 +183,7 @@
 
       activePlayers.forEach(name => {
         let sum = 0;
-        animalItems.forEach(item => {
+        [...animalItems, ...otherItems].forEach(item => {
           const val = Number(document.querySelector(`[name='${item}_${name}']`)?.value) || 0;
           sum += val;
         });
