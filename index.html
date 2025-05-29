@@ -206,6 +206,20 @@
     function calculateScores() {
       const playerScores = {};
 
+      for (const name of activePlayers) {
+        for (const item of allItems) {
+          const input = document.querySelector(`[name='${item}_${name}']`);
+          if (!input || input.value === "") {
+            const message = "점수를 입력해주세요.";
+            resultContainer.innerText = message;
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = "ko-KR";
+            window.speechSynthesis.speak(utterance);
+            return;
+          }
+        }
+      }
+
       activePlayers.forEach(name => {
         let sum = 0;
         [...animalItems, ...otherItems].forEach(item => {
@@ -260,6 +274,16 @@
       })).sort((a, b) => b.total - a.total);
 
       resultContainer.innerHTML = sortedScores.map((p, i) => `<p>${i + 1}등: ${p.name} - 총점 ${p.total}점</p>`).join('');
+
+      // 🔊 TTS 읽기 확장
+      let ttsMessage = "점수 계산이 완료되었습니다. 지금부터 등수를 발표합니다.";
+      sortedScores.slice(0, 3).forEach((p, i) => {
+        ttsMessage += ` ${i + 1}등은 ${p.name}, ${p.total}점입니다.`;
+      });
+
+      const utterance = new SpeechSynthesisUtterance(ttsMessage);
+      utterance.lang = "ko-KR";
+      window.speechSynthesis.speak(utterance);
     }
   </script>
 </body>
