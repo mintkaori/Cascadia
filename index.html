@@ -58,6 +58,14 @@
       <h1 class="title">Cascadia 점수표 계산기</h1>
 
       <div class="player-buttons" id="playerButtons"></div>
+      <div class="field has-addons mb-3">
+        <div class="control is-expanded">
+          <input id="customPlayerName" class="input" type="text" placeholder="새 플레이어 이름 입력" />
+        </div>
+        <div class="control">
+          <button class="button is-success" onclick="addCustomPlayer()">+</button>
+        </div>
+      </div>
 
       <div class="table-container">
         <table class="table is-bordered score-table" id="scoreTable">
@@ -82,7 +90,7 @@
     const tileItems = ["DESERT", "FOREST", "LAKE", "MOUNTAIN", "SWAMP"];
     const otherItems = ["NATURE"];
     const allItems = [...animalItems, ...tileItems, ...otherItems];
-    const playerNames = ["김형석", "이주만", "티아나", "김정민", "이영철", "정영훈", "김지호", "이윤석", "이하진", "김형준"];
+    let playerNames = ["김형석", "이주만", "티아나", "김정민", "이영철", "정영훈", "김지호", "이윤석", "이하진", "김형준"];
     let activePlayers = [];
 
     const table = document.getElementById("scoreTable");
@@ -90,13 +98,28 @@
     const playerButtons = document.getElementById("playerButtons");
     const resultContainer = document.getElementById("resultContainer");
 
-    playerNames.forEach(name => {
-      const btn = document.createElement("button");
-      btn.className = "button is-link is-small";
-      btn.innerText = name;
-      btn.onclick = () => togglePlayer(name);
-      playerButtons.appendChild(btn);
-    });
+    function renderPlayerButtons() {
+      playerButtons.innerHTML = '';
+      playerNames.forEach(name => {
+        const btn = document.createElement("button");
+        btn.className = "button is-link is-small";
+        btn.innerText = name;
+        btn.onclick = () => togglePlayer(name);
+        playerButtons.appendChild(btn);
+      });
+    }
+
+    renderPlayerButtons();
+
+    function addCustomPlayer() {
+      const input = document.getElementById("customPlayerName");
+      const name = input.value.trim();
+      if (name && !playerNames.includes(name)) {
+        playerNames.push(name);
+        renderPlayerButtons();
+        input.value = "";
+      }
+    }
 
     function togglePlayer(name) {
       const headerRow = table.tHead.rows[0];
@@ -136,7 +159,9 @@
           const td = document.createElement("td");
           td.dataset.player = name;
           const input = document.createElement("input");
-          input.type = "number";
+          input.type = "text";
+          input.inputMode = "numeric";
+          input.pattern = "[0-9]*";
           input.className = "input score-input";
           input.placeholder = "";
           input.min = 0;
