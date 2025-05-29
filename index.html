@@ -79,7 +79,7 @@
         </table>
       </div>
 
-      <button class="button is-primary" onclick="calculateScores()">점수 계산</button>
+      <button class="button is-primary" id="calculateButton">점수 계산</button>
 
       <div class="result" id="resultContainer"></div>
     </div>
@@ -210,9 +210,9 @@
         for (const item of allItems) {
           const input = document.querySelector(`[name='${item}_${name}']`);
           if (!input || input.value === "") {
-            const message = "점수를 입력해주세요.";
-            resultContainer.innerText = message;
-            const utterance = new SpeechSynthesisUtterance(message);
+            const msg = "점수를 입력해주세요.";
+            resultContainer.innerText = msg;
+            const utterance = new SpeechSynthesisUtterance(msg);
             utterance.lang = "ko-KR";
             window.speechSynthesis.speak(utterance);
             return;
@@ -275,16 +275,21 @@
 
       resultContainer.innerHTML = sortedScores.map((p, i) => `<p>${i + 1}등: ${p.name} - 총점 ${p.total}점</p>`).join('');
 
-      // 🔊 TTS 읽기 확장
       let ttsMessage = "점수 계산이 완료되었습니다. 지금부터 등수를 발표합니다.";
       sortedScores.slice(0, 3).forEach((p, i) => {
         ttsMessage += ` ${i + 1}등은 ${p.name}, ${p.total}점입니다.`;
       });
 
-      const utterance = new SpeechSynthesisUtterance(ttsMessage);
-      utterance.lang = "ko-KR";
-      window.speechSynthesis.speak(utterance);
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(ttsMessage);
+        utterance.lang = "ko-KR";
+        window.speechSynthesis.speak(utterance);
+      }, 100);
     }
+
+    document.getElementById("calculateButton").addEventListener("click", () => {
+      calculateScores();
+    });
   </script>
 </body>
 </html>
